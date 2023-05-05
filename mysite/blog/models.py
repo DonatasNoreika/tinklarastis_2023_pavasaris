@@ -9,6 +9,9 @@ class Post(models.Model):
     author = models.ForeignKey(to=User, verbose_name="Autorius", on_delete=models.CASCADE)
     date = models.DateTimeField(verbose_name="Data", auto_now_add=True)
 
+    def num_comments(self):
+        return len(Comment.objects.filter(post=self.pk))
+
     class Meta:
         ordering = ['-date']
 
