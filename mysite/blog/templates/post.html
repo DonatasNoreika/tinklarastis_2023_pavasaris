@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block "title" %}Straipsniai{% endblock %}
+
+{% block "content" %}
+    <article class="media content-section">
+        <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2">{{ post.author }}</a>
+                <small class="text-muted">{{ post.date|date:"Y-m-d, f" }}</small>
+            </div>
+            <h2><a class="article-title">{{ post.title }}</a></h2>
+            <p class="article-content">{{ post.text | safe }}</p>
+            <a>Komentarų: {{ post.num_comments }}</a>
+        </div>
+    </article>
+{% endblock %}
