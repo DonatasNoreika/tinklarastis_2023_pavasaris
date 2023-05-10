@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.edit import FormMixin
 from .forms import CommentForm
 
+
 # Create your views here.
 class PostListView(generic.ListView):
     model = Post
@@ -80,7 +81,6 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
 class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Comment
     fields = ['body']
-    success_url = '/'
     template_name = 'comment_form.html'
 
     def get_success_url(self):
@@ -91,6 +91,19 @@ class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateV
         form.instance.post = Post.objects.get(pk=self.kwargs['pk2'])
         form.save()
         return super().form_valid(form)
+
+    def test_func(self):
+        comment = self.get_object()
+        return comment.author == self.request.user
+
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    model = Comment
+    context_object_name = 'comment'
+    template_name = 'comment_delete.html'
+
+    def get_success_url(self):
+        return reverse('post', kwargs={'pk': self.kwargs['pk2']})
 
     def test_func(self):
         comment = self.get_object()
