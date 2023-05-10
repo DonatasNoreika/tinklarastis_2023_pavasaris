@@ -1,6 +1,6 @@
 from django.shortcuts import reverse
 from django.views import generic
-from .models import Post
+from .models import Post, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.edit import FormMixin
 from .forms import CommentForm
@@ -75,3 +75,23 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
     def test_func(self):
         post = self.get_object()
         return post.author == self.request.user
+
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+    model = Comment
+    fields = ['body']
+    success_url = '/'
+    template_name = 'comment_form.html'
+
+    def get_success_url(self):
+        return reverse('post', kwargs={'pk': self.kwargs['pk2']})
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.post = Post.objects.get(pk=self.kwargs['pk2'])
+        form.save()
+        return super().form_valid(form)
+
+    def test_func(self):
+        comment = self.get_object()
+        return comment.author == self.request.user

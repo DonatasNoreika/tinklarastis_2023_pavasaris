@@ -36,6 +36,13 @@
             {% for comment in post.comments.all %}
             <small class="text-muted">{{ comment.author }}, {{ comment.date|date:"Y-m-d, f" }}</small>
             <p>{{ comment.body }}</p>
+            {% if comment.author == user %}
+            <div>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'comment_update' post.id comment.id %}">Redaguoti</a>
+                <a class="btn btn-danger btn-sm mt-1 mb-1" href="">Ištrinti</a>
+            </div>
+            {% endif %}
+            <hr>
             {% endfor %}
         </div>
     </div>
