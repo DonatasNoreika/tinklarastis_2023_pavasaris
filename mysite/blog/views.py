@@ -45,3 +45,14 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView
     def test_func(self):
         post = self.get_object()
         return post.author == self.request.user
+
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    model = Post
+    context_object_name = 'post'
+    success_url = "/"
+    template_name = 'post_delete.html'
+
+    def test_func(self):
+        post = self.get_object()
+        return post.author == self.request.user
